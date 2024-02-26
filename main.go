@@ -28,9 +28,9 @@ func faqHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, `<h1>FAQ page</h1>
 	<ul>
-		<li><b>1 Куда бы вы хотели поехать отдыхать летом?</b> В Турцию</li>
-		<li><b>2 Сколько вас человек?</b> Нас 4 человека</li>
-		<li><b>3 Сколько будет стоит путевка?</b> Путевка на 4-х стоит 2 млн. тенге</li>
+		<li><b>Куда бы вы хотели поехать отдыхать летом?</b> В Турцию</li>
+		<li><b>Сколько вас человек?</b> Нас 4 человека</li>
+		<li><b>Сколько будет стоит путевка?</b> Путевка на 4-х стоит 2 млн. тенге</li>
 	</ul>
 	`)
 }
@@ -41,6 +41,8 @@ func main() {
 	r.Get("/contact", contactHandler)
 	r.Get("/faq", faqHandler)
 	r.NotFound(pageNotFoundHandler)
+
 	fmt.Println("Stearting the server on :3000...")
+
 	http.ListenAndServe(":3000", r)
 }
