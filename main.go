@@ -26,6 +26,7 @@ func pageNotFoundHandler(w http.ResponseWriter, r *http.Request) {
 func faqHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html;charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	
 	fmt.Fprint(w, `<h1>FAQ page</h1>
 	<ul>
 		<li><b>Куда бы вы хотели поехать отдыхать летом?</b> В Турцию</li>
@@ -37,6 +38,7 @@ func faqHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := chi.NewRouter()
+
 	r.Get("/", homeHandler)
 	r.Get("/contact", contactHandler)
 	r.Get("/faq", faqHandler)
