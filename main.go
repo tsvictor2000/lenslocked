@@ -43,6 +43,8 @@ func main() {
 	r.Get("/contact", contactHandler)
 	r.Get("/faq", faqHandler)
 	r.NotFound(pageNotFoundHandler)
+
 	fmt.Println("Stearting the server on :3000...")
+
 	http.ListenAndServe(":3000", r)
 }
