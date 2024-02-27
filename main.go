@@ -21,6 +21,7 @@ func pageNotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusNotFound)
 	fmt.Fprint(w, "<h1>Page not found</h1>")
+
 }
 
 func faqHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +44,7 @@ func main() {
 	r.Get("/contact", contactHandler)
 	r.Get("/faq", faqHandler)
 	r.NotFound(pageNotFoundHandler)
-
+	
 	fmt.Println("Stearting the server on :3000...")
 
 	http.ListenAndServe(":3000", r)
