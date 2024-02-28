@@ -10,10 +10,9 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
+func executeTemplate(w http.ResponseWriter, filepath string) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	tplpath := filepath.Join("templates", "home.gohtml")
-	tpl, err := template.ParseFiles(tplpath)
+	tpl, err := template.ParseFiles(filepath)
 	if err != nil {
 		log.Printf("Ошибка парсинга %v", err)
 		http.Error(w, "Произошла ошибка парсинга шаблона", http.StatusInternalServerError)
@@ -27,9 +26,14 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	tplpath := filepath.Join("templates", "home.gohtml")
+	executeTemplate(w, tplpath)
+}
+
 func contactHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprint(w, "<h1>Contact page</h1><p>To get in touch, email me at <a href='mailto:3_7_11@mail.ru'>3_7_11@mail.ru</a></p>")
+	tplpath := filepath.Join("templates", "contact.gohtml")
+	executeTemplate(w, tplpath)
 }
 
 func pageNotFoundHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +63,7 @@ func main() {
 	r.Get("/contact", contactHandler)
 	r.Get("/faq", faqHandler)
 	r.NotFound(pageNotFoundHandler)
-	
+
 	fmt.Println("Stearting the server on :3000...")
 
 	http.ListenAndServe(":3000", r)
