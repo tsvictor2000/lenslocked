@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"html/template"
+	"lenslocked/controllers"
 	"lenslocked/views"
 	"log"
 	"net/http"
@@ -22,11 +22,6 @@ func executeTemplate(w http.ResponseWriter, filepath string) {
 	t.Execute(w, nil)
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	tplpath := filepath.Join("templates", "home.gohtml")
-	executeTemplate(w, tplpath)
-}
-
 func contactHandler(w http.ResponseWriter, r *http.Request) {
 	tplpath := filepath.Join("templates", "contact.gohtml")
 	executeTemplate(w, tplpath)
@@ -44,9 +39,15 @@ func faqHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// парсинг шаблонов
 	r := chi.NewRouter()
 
-	r.Get("/", homeHandler)
+	tpl, err := views.Parse(filepath.Join("templates", "home.gohtml"))
+	if err != nil {
+		panic(err)
+	}
+	r.Get("/", controllers.StaticHandler(tpl))
+
 	r.Get("/contact", contactHandler)
 	r.Get("/faq", faqHandler)
 	r.NotFound(pageNotFoundHandler)
