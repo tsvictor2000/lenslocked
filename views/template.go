@@ -41,7 +41,7 @@ func Parse(filepath string) (Template, error) {
 
 func (t Template) Execute(w http.ResponseWriter, data any) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	err := t.htmlTpl.Execute(w, nil)
+	err := t.htmlTpl.Execute(w, data)
 	if err != nil {
 		log.Printf("Ошибка выполнения шаблона %v", err)
 		http.Error(w, "Произошла ошибка выполнения шаблона", http.StatusInternalServerError)
