@@ -26,6 +26,10 @@ func main() {
 	r.Get("/dogovors", controllers.StaticHandler(
 		views.Must(views.ParseFS(templates.FS, "doglist.gohtml", "tailwind.gohtml"))))
 
+	r.Get("/signup", controllers.StaticHandler(
+		views.Must(views.ParseFS(templates.FS, "signup.gohtml", "tailwind.gohtml"))))
+
+
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page not found", http.StatusNotFound)
 	})
