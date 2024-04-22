@@ -62,14 +62,47 @@ func main() {
 	println("Table create")
 
 	// вставка записей
-	name := "John Dow"
-	email := "John@mail.ru"
+	// name := "Bob Smith"
+	// email := "bob@mail.ru"
 
-	_, err = db.Exec(`
-	INSERT INTO users (name, email)
-	VALUES ($1, $2);`, name, email)
+	// row := db.QueryRow(`
+	// 	INSERT INTO users (name, email)
+	// 	VALUES ($1, $2) RETURNING id;
+	// `, name, email)
+	// var id int
+	// err = row.Scan(&id)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println("User created. ID =", id)
+
+	var id int = 1
+	row := db.QueryRow(`
+		SELECT name, email
+		FROM users
+		WHERE id=$1;
+	`, id)
+	var name, email string
+	err = row.Scan(&name, &email)
+	if err == sql.ErrNoRows {
+		fmt.Println("No rows!")
+	}
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("User created")
+	fmt.Printf("Информация о пользователе. Имя=%s, E-mail=%s\n", name, email)
+
+	userID := 1
+	for i := 1; i <= 5; i++ {
+		amount := i * 100
+		desc := fmt.Sprintf("Fake order #%d", i)
+		_, err := db.Exec(`
+			INSERT INTO orders (user_id, amount, description)
+			VALUES ($1, $2, $3)`, userID, amount, desc)
+		if err != nil {
+			panic(err)
+		}
+	}
+	println("Created orders")
+
 }
