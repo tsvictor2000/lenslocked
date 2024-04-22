@@ -60,4 +60,16 @@ func main() {
 		panic(err)
 	}
 	println("Table create")
+
+	// вставка записей
+	name := "John Dow"
+	email := "John@mail.ru"
+
+	_, err = db.Exec(`
+	INSERT INTO users (name, email)
+	VALUES ($1, $2);`, name, email)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("User created")
 }
