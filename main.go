@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"lenslocked/controllers"
+	"lenslocked/models"
 	"lenslocked/templates"
 	"lenslocked/views"
 	"net/http"
@@ -26,7 +27,20 @@ func main() {
 	r.Get("/dogovors", controllers.StaticHandler(
 		views.Must(views.ParseFS(templates.FS, "doglist.gohtml", "tailwind.gohtml"))))
 
-	usersC := controllers.Users{}
+	cfg := models.DefaultPostgresConfig()
+	db, err := models.Open(cfg)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	userService := models.UserService {
+		DB: db,
+	}
+
+	usersC := controllers.Users{
+		UserService: &userService,
+	}
 	usersC.Templates.New = views.Must(views.ParseFS(templates.FS, "signup.gohtml", "tailwind.gohtml"))
 	r.Get("/signup", usersC.New)
 	r.Post("/users", usersC.Create)
