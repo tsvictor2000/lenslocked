@@ -54,7 +54,7 @@ func main() {
 		http.Error(w, "Page not found", http.StatusNotFound)
 	})
 
-	fmt.Println("Stearting the server on :3000...")
+	fmt.Println("Starting the server on :3000...")
 
 	csrfKey := "gjtnv57dkr9cbw3KEHN1PAMX54kd84nb"
 	csrfMw := csrf.Protect([]byte(csrfKey), csrf.Secure(false))
