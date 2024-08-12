@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/csrf"
 )
 
 func main() {
@@ -55,6 +56,9 @@ func main() {
 
 	fmt.Println("Stearting the server on :3000...")
 
-	http.ListenAndServe(":3000", r)
+	csrfKey := "gjtnv57dkr9cbw3KEHN1PAMX54kd84nb"
+	csrfMw := csrf.Protect([]byte(csrfKey), csrf.Secure(false))
+
+	http.ListenAndServe(":3000", csrfMw(r))
 
 }
