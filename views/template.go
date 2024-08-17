@@ -6,6 +6,8 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/csrf"
 )
 
 type Template struct {
@@ -49,8 +51,21 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 // }
 
 func (t Template) Execute(w http.ResponseWriter, r *http.Request, data any) {
+	tpl, err := t.htmlTpl.Clone()
+	if err != nil {
+		log.Printf("Ошибка при рендеринге страницы: %v", err)
+		http.Error(w, "Ошибка при рендеринге страницы", http.StatusInternalServerError)
+		return
+	}
+	tpl = tpl.Funcs(
+		template.FuncMap{
+			"csrfField": func() template.HTML {
+				return csrf.TemplateField(r)
+			},
+		},
+	)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	err := t.htmlTpl.Execute(w, data)
+	err = tpl.Execute(w, data)
 	if err != nil {
 		log.Printf("Ошибка выполнения шаблона %v", err)
 		http.Error(w, "Произошла ошибка выполнения шаблона", http.StatusInternalServerError)
